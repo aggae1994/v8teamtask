@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'onboarding/onboarding_pages.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ));
+      debugShowCheckedModeBanner: false,
+      title: '藝rism ',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: OnboardingPages(), // OnboardingPages를 첫 화면으로 설정
+    );
   }
 }
