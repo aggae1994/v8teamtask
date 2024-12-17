@@ -1,5 +1,9 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services' // Firebase 설정
+    id 'com.google.firebase.crashlytics' // Firebase Crashlytics
+    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
@@ -7,27 +11,25 @@ plugins {
 
 android {
     namespace = "com.example.flutter_yerism_app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 33 // 최신 compileSdk 버전으로 설정 (예: 33)
+
+    ndkVersion = flutter.ndkVersion // Flutter가 자동 관리
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17 // JDK 17 이상
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = "17" // JDK 17과 호환
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.flutter_yerism_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdk = 21 // 최소 SDK 버전 설정
+        targetSdk = 33 // 최신 targetSdk 버전으로 설정
+        versionCode = 1 // 앱 버전 코드
+        versionName = "1.0.0" // 앱 버전 이름
     }
 
     buildTypes {
@@ -35,10 +37,28 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
+            minifyEnabled false // 릴리스 빌드에서 Proguard 비활성화 (필요시 활성화)
+            shrinkResources false
         }
+        debug {
+            debuggable true
+        }
+    }
+
+    lintOptions {
+        abortOnError false // Lint 오류로 빌드가 중단되지 않도록 설정
     }
 }
 
 flutter {
-    source = "../.."
+    source = "../.." // Flutter 프로젝트의 기본 디렉토리 경로
+}
+
+dependencies {
+    // Firebase 및 Crashlytics 라이브러리
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
+
+    // 기타 종속성 추가 가능
 }

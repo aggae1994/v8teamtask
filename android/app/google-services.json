@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "882971547142",
+    "project_id": "yerism",
+    "storage_bucket": "yerism.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882971547142:android:bb6073a98724c9c9351587",
+        "android_client_info": {
+          "package_name": "com.example.flutter_yerism_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxPXUUlq3l5vcKnAc-I2eUdEYZR329ktM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

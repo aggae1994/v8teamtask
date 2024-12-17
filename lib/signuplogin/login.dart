@@ -1,7 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_yerism_app/main_page/market_Exhibition.dart'; // market_Exhibition.dart import
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_yerism_app/main_page/market_Exhibition.dart';
 
 class LoginScreen extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> loginUser(BuildContext context) async {
+    try {
+      QuerySnapshot userSnapshot = await _firestore
+          .collection('accounts')
+          .where('email', isEqualTo: emailController.text)
+          .where('password', isEqualTo: passwordController.text)
+          .get();
+
+      if (userSnapshot.docs.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('로그인 성공!')),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MarketExhibitionPage(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('이메일 또는 비밀번호가 잘못되었습니다.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('오류 발생: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,21 +64,17 @@ class LoginScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
-              CustomTextField(label: '이메일 또는 휴대폰 번호'),
+              CustomTextField(
+                  label: '이메일 또는 휴대폰 번호', controller: emailController),
               SizedBox(height: 10),
-              CustomTextField(label: '비밀번호'),
+              CustomTextField(
+                  label: '비밀번호',
+                  controller: passwordController,
+                  obscureText: true),
               SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // market_Exhibition.dart로 이동
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MarketExhibitionPage(),
-                      ),
-                    );
-                  },
+                  onPressed: () => loginUser(context), // Firestore 데이터 검증 호출
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[300],
                     minimumSize: Size(200, 50),
@@ -58,7 +89,7 @@ class LoginScreen extends StatelessWidget {
               Center(
                 child: TextButton(
                   onPressed: () {
-                    // 비밀번호 찾기 페이지 이동 (추후 구현)
+                    //비번찾기 나중에 만들기
                   },
                   child: Text(
                     '비밀번호를 잊으셨나요?',
@@ -76,8 +107,15 @@ class LoginScreen extends StatelessWidget {
 
 class CustomTextField extends StatelessWidget {
   final String label;
+  final TextEditingController controller;
+  final bool obscureText;
 
-  const CustomTextField({Key? key, required this.label}) : super(key: key);
+  const CustomTextField({
+    Key? key,
+    required this.label,
+    required this.controller,
+    this.obscureText = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +128,8 @@ class CustomTextField extends StatelessWidget {
         ),
         SizedBox(height: 5),
         TextField(
-          obscureText: label == '비밀번호' ? true : false,
+          controller: controller,
+          obscureText: obscureText,
           decoration: InputDecoration(
             border: UnderlineInputBorder(),
             focusedBorder: UnderlineInputBorder(
